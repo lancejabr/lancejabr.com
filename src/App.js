@@ -14,13 +14,10 @@ import {
     Button
 } from 'reactstrap';
 
+import { Link, Route } from 'react-router-dom';
+
 import Home from './Home'
 import About from './About'
-
-const ContentTypes = {
-    home: <Home/>,
-    about: <About/>
-};
 
 class App extends Component {
 
@@ -30,7 +27,6 @@ class App extends Component {
         this.toggle = this.toggle.bind(this);
         this.state = {
             isOpen: false,
-            contentType: "home"
         };
     }
 
@@ -42,14 +38,10 @@ class App extends Component {
 
     render() {
 
-        let navItems = Object.keys(ContentTypes).map((currentValue, index) => { return (
+        let navItems = ["home", "about"].map((currentValue, index) => { return (
             <NavItem key={index.toString()}>
-                <NavLink onClick={() => {
-                    this.setState({
-                        contentType: currentValue
-                    });
-                    console.log(this.state)
-                }}>{currentValue}</NavLink>
+                <Link className={"nav-link"} to={currentValue != "home" ? ("/" + currentValue) : "/"}>{currentValue}</Link>
+
             </NavItem>
         )});
 
@@ -57,7 +49,7 @@ class App extends Component {
             <Container fluid={true}>
                 <Navbar color="light" light expand="xs" fixed="top">
                     <Container fluid={true} style={{maxWidth: '980px'}}>
-                        <NavbarBrand href="/">Lance Jabr</NavbarBrand>
+                        <Link className={"navbar-brand"} to={"/"}>Lance Jabr</Link>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>{navItems}</Nav>
@@ -65,12 +57,10 @@ class App extends Component {
                     </Container>
                 </Navbar>
                 <Container fluid={true} style={{maxWidth: '980px', marginTop: "100px"}}>
-                    {
-                        ContentTypes[this.state.contentType]
-                    }
+                    <Route exact path={"/"} component={Home}/>
+                    <Route path={"/about"} component={About}/>
                 </Container>
             </Container>
-
         );
     }
 }
